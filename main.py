@@ -50,7 +50,7 @@ def returninfo(mlist):
 
 # various settings
 base_url = "http://portal.tee.gr/portal/page/portal/tptee/SERVICES_INFORM_TPTEE/prokhrixeis_meleton/"
-month_list = "IAN FEB MAR APR MAY JUN JUL AUG SEPT OCT NEO DEC".split(" ")
+month_list = "IAN FEB MAR APR MAY JUN JUL AUG SEPT OCT NOE DEC".split(" ")
 sub_page_list = "prok_mel ap_anath arch-comp loipes-anatheseis dwrean-meletes".split(" ")
 date_list = datetime.date.today().isoformat().split('-')
 url_year = date_list[0]
