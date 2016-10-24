@@ -1,4 +1,55 @@
 ﻿import re
+import urllib.request
+import urllib.parse
+
+def getPage(url):
+    '''Function that fakes a Mozilla and gets the page and decodes
+    from ISO 8859 7'''
+
+    user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
+    values = None
+    headers = {'User-Agent': user_agent}
+
+    req = urllib.request.Request(url, values, headers)
+    
+    f = urllib.request.urlopen(req)
+    return (f.read().decode('iso-8859-7'))
+
+def returnlines(text_list, key):
+    '''return lines containing the key'''
+    result = []
+    for line in text_list:
+        if key in line:
+            result.append(line)
+    del result[0]
+    return result
+
+def returninfo(mlist):
+    ## match link with a ref <a(.*?)>
+    ## match other two texts <font class(.*?)<
+    p_link = re.compile('<a(.*?)>')
+    p_text = re.compile('<font class(.*?)<')
+    result = []
+    for match in mlist:
+        #print (match)
+        link_list = p_link.findall(match)
+        text_list = p_text.findall(match)
+        try:
+            link = link_list[0]
+        except:
+            link = "No link available"
+        org = text_list[0]
+        body = text_list[1]
+        print (link,org,body,sep='\n')
+
+#        match = match.split('<')
+#        if len(match)>7:
+#            #print (match)
+#            link = match[2].split('\"')[1].strip()
+#            org = match[3].split('>')[1].strip()
+#            body = match[7].split('>')[1].strip()
+#            result.append([org,body,link])
+    return result
 
 strings = '''<TD vAlign="top" style="padding:16px 16px 0px 16px;" width="100%"><font class="titleorimageid16244557siteid467">ΥΠΟΥΡΓΕΙΟ ΠΕΡΙΒΑΛΛΟΝΤΟΣ &amp; ΕΝΕΡΓΕΙΑΣ</font><BR><font class="descriptionid16244557siteid467">ΑΝΑΘΕΣΗ:&quot;Μ1:Υδατικό διαμέρισμα Δυτικής Πεόποννήσου (GR 01)Βόρειας Πελοποννήσου (GR 02) και Ανατολικής Πελοποννήσου (GR 03)&quot;Ημερομηνία Ανάρτησης 4.9.2016</font>&nbsp;</TD></TR>
 <TR ALIGN="LEFT">
@@ -17,6 +68,12 @@ link_pat = re.compile(r'<a\shref="(.+?)"')
 
 # siteid467">ΥΠΟΥΡΓΕΙΟ ΠΕΡΙΒΑΛΛΟΝΤΟΣ &amp; ΕΝΕΡΓΕΙΑΣ</font>
 title_pat = re.compile(r'siteid467">(.+?)<')
+
+url = "http://portal.tee.gr/portal/page/portal/tptee/SERVICES_INFORM_TPTEE/prokhrixeis_meleton/2016/PR_MEL-OCT16/loipes-anatheseis"
+key = 'descriptionid16244557siteid467'
+page = getPage(url).split('\n')
+match_lines = returnlines(page,key)
+#m = returninfo(match_lines)
 
 c = 0
 for i in strings.split('\n'):
