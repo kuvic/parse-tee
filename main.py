@@ -10,9 +10,7 @@ def getPage(url):
     user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
     values = None
     headers = {'User-Agent': user_agent}
-
     req = urllib.request.Request(url, values, headers)
-    
     f = urllib.request.urlopen(req)
     return (f.read().decode('iso-8859-7'))
 
@@ -30,16 +28,12 @@ def returninfo(mlist):
 	title_pat = re.compile(r'siteid467">(.+?)<')
 	result = []
 	c = 0
-	
 	for i in mlist:
 		if "siteid467" in i:
-			
 			try:
 				link = re.findall(link_pat, i)[0]
 			except:
 				link = "no link"
-				
-			
 			try:
 				text_body = re.findall(title_pat, i)
 				text = text_body[1]
@@ -49,14 +43,18 @@ def returninfo(mlist):
 		result.append([link,title,text])
 	return result
 	
+	
+########################################################################
+# Main program
+########################################################################
+
+# various settings
 base_url = "http://portal.tee.gr/portal/page/portal/tptee/SERVICES_INFORM_TPTEE/prokhrixeis_meleton/"
 month_list = "IAN FEB MAR APR MAY JUN JUL AUG SEPT OCT NEO DEC".split(" ")
 sub_page_list = "prok_mel ap_anath arch-comp loipes-anatheseis dwrean-meletes".split(" ")
 date_list = datetime.date.today().isoformat().split('-')
 url_year = date_list[0]
 url_month = month_list[(int(date_list[1])-1)]
-#print (date_list[1], int(date_list[1]), month_list[int(date_list[1])])
-
 url_ref = "http://portal.tee.gr/portal/page/portal/tptee/SERVICES_INFORM_TPTEE/prokhrixeis_meleton/2016/PR_MEL-OCT16/loipes-anatheseis"
 url = base_url + url_year + '/' + 'PR_MEL-' + url_month + url_year[2:] + '/'
 
@@ -79,8 +77,12 @@ for u in url_list:
 	print ("")
 	
 	# get page and split it at new lines
-	page = getPage(u).split('\n')
-	
+	try:
+		page = getPage(u).split('\n')
+	except:
+		print("Problem while downloading url:")
+		print(u)
+		
 	# delete lines that do not contain our key
 	match_lines = returnlines(page,key)
 	
