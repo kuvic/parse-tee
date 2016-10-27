@@ -3,25 +3,28 @@ import urllib.request
 import urllib.parse
 import datetime
 
+
 def getPage(url):
-    '''Function that fakes a Mozilla and gets the page and decodes
-    from ISO 8859 7'''
+    """Function that fakes a Mozilla and gets the page and decodes
+    from ISO 8859 7"""
 
     user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
     values = None
     headers = {'User-Agent': user_agent}
     req = urllib.request.Request(url, values, headers)
     f = urllib.request.urlopen(req)
-    return (f.read().decode('iso-8859-7'))
+    return f.read().decode('iso-8859-7')
+
 
 def returnlines(text_list, key):
-    '''return lines containing the key'''
+    """return lines containing the key"""
     result = []
     for line in text_list:
         if key in line:
             result.append(line)
     del result[0]
     return result
+
 
 def returninfo(mlist):
 	link_pat = re.compile(r'<a\shref="(.+?)"')
